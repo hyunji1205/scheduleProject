@@ -1,14 +1,15 @@
 package org.example.controller;
 
-import org.example.Container;
+import org.example.container.Container;
 import org.example.dto.Schedule;
 import org.example.service.ScheduleService;
+import org.example.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static org.example.Container.scheduleService;
+import static org.example.container.Container.scheduleService;
 
 public class ScheduleController extends Controller {
     private Scanner sc;
@@ -16,11 +17,13 @@ public class ScheduleController extends Controller {
     private String cmd;
     private String actionMethodName;
     private ScheduleService ScheduleService;
+    private UserService userService;
 
     public ScheduleController(Scanner sc) {
 
         this.sc = sc;
         this.schedules = new ArrayList<>();
+        userService = Container.userService;
     }
 
     public void doAction(String cmd, String actionMethodName) {

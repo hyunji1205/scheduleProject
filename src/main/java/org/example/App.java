@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.controller.Controller;
+import org.example.controller.ExportController;
 import org.example.controller.ScheduleController;
 import org.example.controller.UserController;
 
@@ -10,6 +11,8 @@ public class App {
 
     public void start() {
 
+
+
         System.out.println("== 프로그램 시작 ==");
 
 
@@ -17,6 +20,7 @@ public class App {
 
         UserController userController = new UserController(sc);
         ScheduleController scheduleController = new ScheduleController(sc);
+        ExportController exportController = new ExportController(sc);
 
         scheduleController.makeTestData();
         userController.makeTestData();
@@ -36,6 +40,12 @@ public class App {
             }
 
             String[] cmdBits = cmd.split(" "); // article write / member join
+
+            if ( cmdBits.length == 1 ) {
+                System.out.println("존재하지 않는 명령어입니다.");
+                continue;
+            }
+
             String controllerName = cmdBits[0]; // article / member
             String actionMethodName = cmdBits[1];
 
@@ -45,7 +55,11 @@ public class App {
                 controller = scheduleController;
             } else if (controllerName.equals("회원")) {
                 controller = userController;
-            } else {
+            } else if (controllerName.equals("export")) {
+                controller = exportController;
+            }
+
+            else {
                 System.out.println("존재하지 않는 명령어입니다.");
                 continue;
             }

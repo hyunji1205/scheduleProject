@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.Container;
+import org.example.container.Container;
 import org.example.dao.UserDao;
 import org.example.dto.User;
 

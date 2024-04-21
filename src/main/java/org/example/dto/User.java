@@ -8,4 +8,8 @@ public class User {
         this.loginName = loginName;
         this.loginPw = loginPw;
     }
+
+    public String getLoginName() {
+        return loginName;
+    }
 }

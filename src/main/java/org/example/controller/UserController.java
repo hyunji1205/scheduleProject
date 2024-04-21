@@ -1,10 +1,9 @@
 package org.example.controller;
 
-import org.example.Container;
+import org.example.container.Container;
 import org.example.dto.User;
 import org.example.service.UserService;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class UserController extends Controller {
