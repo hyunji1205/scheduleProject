@@ -1,9 +1,8 @@
 package org.example.controller;
 
+import org.example.Container;
 import org.example.dto.User;
 
-import java.lang.reflect.Member;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,9 +14,10 @@ public class UserController extends Controller {
     private String actionMethodName;
 
 
+
     public UserController(Scanner sc) {
         this.sc = sc;
-        users = new ArrayList<>();
+        users = Container.userDao.users;
     }
 
     public void doAction(String cmd, String actionMethodName) {
@@ -30,6 +30,9 @@ public class UserController extends Controller {
                 break;
             case "로그인":
                 doLogin();
+                break;
+            case "로그아웃":
+                doLogout();
                 break;
             default:
                 System.out.println("존재하지 않는 명령어 입니다.");
@@ -86,6 +89,7 @@ public class UserController extends Controller {
     }
 
     public void doLogin() {
+
         System.out.printf("이름 : ");
         String loginName = sc.nextLine();
         System.out.printf("비밀번호 : ");
@@ -103,7 +107,14 @@ public class UserController extends Controller {
             return;
         }
 
+        loginedUser = user;
         System.out.printf("로그인 성공! %s님 환영합니다!\n", loginName);
+    }
+
+
+    private void doLogout() {
+        loginedUser = null;
+        System.out.println("로그아웃 되었습니다.");
     }
 
     private boolean isJoinableLoginName(String loginName) {

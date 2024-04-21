@@ -50,6 +50,31 @@ public class App {
                 continue;
             }
 
+            String actionName = controllerName + "/" + actionMethodName;
+
+            switch ( actionName ) {
+                case "일정/등록":
+                case "일정/변경":
+                case "일정/검색":
+                case "일정/목록":
+                case "회원/로그아웃":
+                    if ( Controller.isLogined() == false ) {
+                        System.out.println("로그인 후 이용해주세요.");
+                        continue;
+                    }
+                    break;
+            }
+
+            switch ( actionName ) {
+                case "회원/로그인":
+                case "회원/가입":
+                    if ( Controller.isLogined() ) {
+                        System.out.println("로그아웃 후 이용해주세요.");
+                        continue;
+                    }
+                    break;
+            }
+
             controller.doAction(cmd, actionMethodName);
         }
 
