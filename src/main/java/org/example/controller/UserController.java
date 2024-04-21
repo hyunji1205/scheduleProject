@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.Container;
 import org.example.dto.User;
+import org.example.service.UserService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,15 +10,15 @@ import java.util.Scanner;
 public class UserController extends Controller {
 
     private Scanner sc;
-    private List<User> users;
     private String cmd;
     private String actionMethodName;
+    private UserService userService;
 
 
 
     public UserController(Scanner sc) {
         this.sc = sc;
-        users = Container.userDao.users;
+        userService = Container.userService;
     }
 
     public void doAction(String cmd, String actionMethodName) {
@@ -43,9 +44,9 @@ public class UserController extends Controller {
     public void makeTestData() {
         System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
 
-        users.add(new User("애송이", "111"));
-        users.add(new User("송현지", "222"));
-        users.add(new User("박재민", "333"));
+        userService.join(new User("애송이", "111"));
+        userService.join(new User("송현지", "222"));
+        userService.join(new User("박재민", "333"));
     }
 
     public void doJoin() {
@@ -82,7 +83,7 @@ public class UserController extends Controller {
         }
 
         User user = new User(loginName, loginPw);
-        users.add(user);
+        userService.join(user);
 
         System.out.printf("회원가입이 완료되었습니다! %s님 환영합니다!\n", loginName);
 
@@ -95,7 +96,7 @@ public class UserController extends Controller {
         System.out.printf("비밀번호 : ");
         String loginPw = sc.nextLine();
 
-        User user = getUserByLoginName(loginName);
+        User user = userService.getUserByLoginName(loginName);
 
         if ( user == null ) {
             System.out.println("해당회원은 존재하지 않습니다.");
@@ -118,7 +119,7 @@ public class UserController extends Controller {
     }
 
     private boolean isJoinableLoginName(String loginName) {
-        int index = getUserIndexByLoginName(loginName);
+        int index = userService.getUserIndexByLoginName(loginName);
 
         if ( index == -1 ) {
             return true;
@@ -127,26 +128,5 @@ public class UserController extends Controller {
         return false;
     }
 
-    private int getUserIndexByLoginName(String loginName) {
-        int i = 0;
 
-        for ( User user : users ) {
-            if ( user.loginName.equals(loginName) ) {
-                return i;
-            }
-            i++;
-        }
-
-        return -1;
-    }
-
-    private User getUserByLoginName(String loginName) {
-        int index = getUserIndexByLoginName(loginName);
-
-        if ( index == -1 ) {
-            return null;
-        }
-
-        return users.get(index);
-    }
 }
