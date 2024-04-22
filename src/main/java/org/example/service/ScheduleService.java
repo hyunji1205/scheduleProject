@@ -5,6 +5,7 @@ import org.example.container.Container;
 import org.example.dao.ScheduleDao;
 import org.example.dto.Schedule;
 
+import java.text.ParseException;
 import java.util.List;
 
 public class ScheduleService {
@@ -19,8 +20,15 @@ public class ScheduleService {
         if (date == null || todo == null) {
             throw new IllegalArgumentException("날짜와 일정 내용은 null일 수 없습니다.");
         }
-        Schedule newSchedule = new Schedule(date, todo);
-        scheduleDao.addSchedule(newSchedule);
+
+        try {
+            // Schedule 객체 생성
+            Schedule newSchedule = new Schedule(date, todo);
+            scheduleDao.addSchedule(newSchedule); // 일정 추가
+        } catch (ParseException e) {
+            System.err.println("날짜 형식이 잘못되었습니다: " + e.getMessage());
+            e.printStackTrace(); // 예외 로그
+        }
     }
 
     // 일정 변경

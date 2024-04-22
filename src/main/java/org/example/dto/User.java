@@ -1,5 +1,11 @@
 package org.example.dto;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class User {
     public String loginName;
     public String loginPw;

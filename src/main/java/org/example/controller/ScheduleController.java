@@ -48,6 +48,10 @@ public class ScheduleController extends Controller {
                 showList();
                 break;
 
+            case "해당 달 목록":
+                findByMonth();
+                break;
+
             default:
                 System.out.println("존재하지 않는 명령어 입니다.");
                 break;
@@ -157,6 +161,20 @@ public class ScheduleController extends Controller {
     }
 
     private void showList() {
+        List<Schedule> forPrintSchedules = scheduleService.getSchedules();
+
+        for (int i = forPrintSchedules.size() - 1; i >= 0; i--) {
+            Schedule schedule = forPrintSchedules.get(i); // 역순으로 가져오기
+
+            String scheduleDate = schedule.getDate(); // 일정 날짜
+            String scheduleContent = schedule.getTodo(); // 일정 내용
+
+            // 일정 정보 출력
+            System.out.printf("%s  | %s\n", scheduleDate, scheduleContent);
+        }
+    }
+
+    private void findByMonth() {
         System.out.print("년도를 입력하세요 (yyyy): ");
         String year = sc.nextLine();
         System.out.print("월을 입력하세요 (MM): ");
@@ -180,6 +198,7 @@ public class ScheduleController extends Controller {
 
     private boolean isValidDate(String date) {
         // 간단한 날짜 형식 검사 (예: "yyyy-MM-dd")
+
         return date.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 

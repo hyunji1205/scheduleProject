@@ -33,7 +33,7 @@ public class App {
         ScheduleController scheduleController = new ScheduleController(sc);
         ExportController exportController = new ExportController(sc);
 
-        scheduleController.makeTestData();
+//        scheduleController.makeTestData();
         userController.makeTestData();
 
 
