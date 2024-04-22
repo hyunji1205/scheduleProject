@@ -6,6 +6,8 @@ import org.example.dao.ScheduleDao;
 import org.example.dto.Schedule;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ScheduleService {
@@ -16,30 +18,23 @@ public class ScheduleService {
     }
 
     // 일정 추가
-    public void addSchedule(String date, String todo) {
-        if (date == null || todo == null) {
-            throw new IllegalArgumentException("날짜와 일정 내용은 null일 수 없습니다.");
-        }
-
+    public int addSchedule(String date, String todo) {
         try {
-            // Schedule 객체 생성
-            Schedule newSchedule = new Schedule(date, todo);
-            scheduleDao.addSchedule(newSchedule); // 일정 추가
-        } catch (ParseException e) {
-            System.err.println("날짜 형식이 잘못되었습니다: " + e.getMessage());
-            e.printStackTrace(); // 예외 로그
+            // Date 객체로 변환
+//            Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+
+            Schedule schedule = new Schedule(date, todo);
+
+            return scheduleDao.addSchedule(schedule); // 일정 추가
+        } catch (ParseException pe) {
+            throw new RuntimeException("날짜 파싱 중 오류: " + pe.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("일정 추가 중 오류: " + e.getMessage());
         }
     }
-
     // 일정 변경
     public boolean changeSchedule(String dateToChange, String newTodo) {
-        List<Schedule> schedules = scheduleDao.findByDate(dateToChange); // ScheduleDao를 통해 날짜로 검색
-        if (schedules != null && !schedules.isEmpty()) { // 리스트가 비어있지 않음 확인
-            Schedule schedule = schedules.get(0); // 첫 번째 일정 가져오기
-            schedule.setTodo(newTodo); // 일정 내용 변경
-            return true; // 성공
-        }
-        return false; // 실패 (일정을 찾을 수 없는 경우)
+        return scheduleDao.changeSchedule(dateToChange, newTodo);
     }
 
     // 모든 일정 반환
@@ -61,6 +56,5 @@ public class ScheduleService {
     public List<Schedule> getSchedulesByYearAndMonth(String year, String month) {
         return scheduleDao.findByMonth(year, month); // ScheduleDao를 통한 월별 검색
     }
-
 
 }

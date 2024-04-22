@@ -79,13 +79,13 @@ public class ScheduleController extends Controller {
         }
     }
 
-    public void makeTestData() {
-        System.out.println("테스트를 위한 게시물 데이터를 생성합니다");
-
-        scheduleService.addSchedule("2024-04-13", "재민생일");
-        scheduleService.addSchedule("2024-04-20", "오늘");
-        scheduleService.addSchedule("2024-04-23", "재민돼지");
-    }
+//    public void makeTestData() {
+//        System.out.println("테스트를 위한 게시물 데이터를 생성합니다");
+//
+//        scheduleService.addSchedule("2024-04-13", "재민생일");
+//        scheduleService.addSchedule("2024-04-20", "오늘");
+//        scheduleService.addSchedule("2024-04-23", "재민돼지");
+//    }
 
     private void doWrite() {
         System.out.printf("일정 날짜를 입력하세요 (yyyy-MM-dd): ");
@@ -98,12 +98,13 @@ public class ScheduleController extends Controller {
 
         System.out.printf("일정 내용을 입력하세요: ");
         String todo = sc.nextLine();
-
-        User loginedUser = session.getLoginedUser();
-
-        scheduleService.addSchedule(date, todo);
-
-        System.out.println("일정이 등록되었습니다.");
+        try {
+            scheduleService.addSchedule(date, todo); // 일정 추가
+            System.out.println("일정이 등록되었습니다.");
+        } catch (Exception e) {
+            System.err.println("일정 등록 중 오류 발생: " + e.getMessage());
+            e.printStackTrace(); // 예외 로그
+        }
     }
 
     private void doChange() {
@@ -141,8 +142,9 @@ public class ScheduleController extends Controller {
         if (matchingSchedules.isEmpty()) {
             System.out.println("해당 날짜의 일정이 없습니다.");
         } else {
-            matchingSchedules.forEach(schedule ->
-                System.out.printf("날짜: %s, 일정: %s\n", schedule.date, schedule.todo));
+            for (Schedule schedule : matchingSchedules) {
+                System.out.printf("날짜: %s, 일정: %s\n", schedule.getDate(), schedule.getTodo());
+            }
         }
     }
 
@@ -155,8 +157,9 @@ public class ScheduleController extends Controller {
         if (matchingSchedules.isEmpty()) {
             System.out.println("일치하는 일정이 없습니다.");
         } else {
-            matchingSchedules.forEach(schedule ->
-                    System.out.printf("날짜: %s, 일정: %s\n", schedule.date, schedule.todo));
+            for (Schedule schedule : matchingSchedules) {
+                System.out.printf("날짜: %s, 일정: %s\n", schedule.getDate(), schedule.getTodo());
+            }
         }
     }
 

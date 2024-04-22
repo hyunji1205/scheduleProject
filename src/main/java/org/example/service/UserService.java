@@ -20,8 +20,8 @@ public class UserService {
     public User getUserByLoginName(String loginName) {
         return userDao.getUserByLoginName(loginName);
     }
-
-    public int getUserIndexByLoginName(String loginName) {
-        return userDao.getUserIndexByLoginName(loginName);
-    }
 }
+//    public int getUserIndexByLoginName(String loginName) {
+//        return userDao.getUserIndexByLoginName(loginName);
+//    }
+//}
