@@ -6,17 +6,16 @@ import org.example.service.ExportService;
 import java.util.Scanner;
 
 public class ExportController extends Controller {
-    private Scanner sc;
+
     private ExportService exportService;
 
     public ExportController(Scanner sc) {
-        this.sc = sc;
         exportService = Container.exportService;
     }
 
     @Override
-    public void doAction(String cmd, String actionMethodName) {
-        switch ( actionMethodName ) {
+    public void doAction(String cmd) {
+        switch ( cmd ) {
             case "html":
                 doHtml();
                 break;

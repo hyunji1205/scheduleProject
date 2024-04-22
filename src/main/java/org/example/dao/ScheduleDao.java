@@ -132,7 +132,7 @@ public class ScheduleDao {
 
         try {
             List<Map<String, Object>> rows = dbConnection.selectRows(sql); // 쿼리 실행
-            if (rows != null) { // null 체크
+            if (rows != null && !rows.isEmpty()) { // null 체크
                 for (Map<String, Object> row : rows) { // 결과 루프
                     schedules.add(new Schedule(row)); // Schedule 객체로 변환
                 }

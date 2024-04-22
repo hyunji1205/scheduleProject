@@ -7,7 +7,13 @@ import org.example.controller.ScheduleController;
 import org.example.controller.UserController;
 import org.example.db.DBConnection;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+
+import static org.example.Calender.calender;
 
 public class App {
     public App() {
@@ -22,8 +28,6 @@ public class App {
 
     public void start() {
 
-
-
         System.out.println("== 프로그램 시작 ==");
 
 
@@ -33,14 +37,34 @@ public class App {
         ScheduleController scheduleController = new ScheduleController(sc);
         ExportController exportController = new ExportController(sc);
 
-//        scheduleController.makeTestData();
-//        userController.makeTestData();
+        // 오늘 날짜 가져오기
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = today.format(formatter);
+
+        // 달력 출력
+        HashMap<String, ArrayList<String>> listMap = new HashMap<>();
+        calender(listMap, today.getYear(), today.getMonthValue());
+
+        System.out.println(" ----------------------------------");
+        System.out.println("1. 회원가입");
+        System.out.println("2. 로그인");
+        System.out.println("3. 일정등록");
+        System.out.println("4. 일정변경");
+        System.out.println("5. 일정검색");
+        System.out.println("6. 일정목록");
+        System.out.println("7. 로그아웃");
+        System.out.println(" ----------------------------------");
 
 
+        // 사용자 입력에 따라 명령어 분류
         while (true) {
-            System.out.printf("명령어) ");
+            System.out.print("메뉴를 선택하세요: ");
             String cmd = sc.nextLine();
             cmd = cmd.trim();
+
+            Controller controller = null;
+
 
             if (cmd.length() == 0) {
                 continue;
@@ -50,64 +74,45 @@ public class App {
                 break;
             }
 
-            String[] cmdBits = cmd.split(" "); // article write / member join
 
-            if ( cmdBits.length == 1 ) {
-                System.out.println("존재하지 않는 명령어입니다.");
-                continue;
-            }
-
-            String controllerName = cmdBits[0]; // article / member
-            String actionMethodName = cmdBits[1];
-
-            Controller controller = null;
-
-            if (controllerName.equals("일정")) {
-                controller = scheduleController;
-            } else if (controllerName.equals("회원")) {
+            if (cmd.indexOf("회원") != -1 || cmd.indexOf("로그") != -1) {
                 controller = userController;
-            } else if (controllerName.equals("export")) {
-                controller = exportController;
-            }
-
-            else {
-                System.out.println("존재하지 않는 명령어입니다.");
+            } else if (cmd.indexOf("일정") != -1) {
+                controller = scheduleController;
+            } else {
+                System.out.printf("%s(은)는 존재하지 않는 명령어 입니다.\n", cmd);
                 continue;
             }
 
-            String actionName = controllerName + "/" + actionMethodName;
 
-            switch ( actionName ) {
-                case "일정/등록":
-                case "일정/변경":
-                case "일정/검색":
-                case "일정/목록":
-                case "회원/로그아웃":
-                    if ( Container.getSession().isLogined() == false ) {
-                        System.out.println("로그인 후 이용해주세요.");
-                        continue;
-                    }
-                    break;
-            }
-
-            switch ( actionName ) {
-                case "회원/로그인":
-                case "회원/가입":
-                    if (Container.getSession().isLogined() ) {
+            switch (cmd) {
+                case "회원가입":
+                case "로그인":
+                    if (Container.getSession().isLogined()) {
                         System.out.println("로그아웃 후 이용해주세요.");
                         continue;
                     }
                     break;
+                case "일정등록":
+                case "일정변경":
+                case "일정검색":
+                case "일정목록":
+                    if (Container.getSession().isLogined() == false) {
+                        System.out.println("로그인 후 이용해주세요.");
+                        continue;
+                    }
+                    break;
+
             }
-
-            controller.doAction(cmd, actionMethodName);
+            controller.doAction(cmd);
         }
 
-
-            sc.close();
-            System.out.println("== 프로그램 끝 ==");
-        }
+        sc.close();
+        System.out.println("== 프로그램 끝 ==");
     }
+}
+
+
 
 
 

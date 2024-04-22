@@ -1,5 +1,7 @@
 package org.example.container;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.controller.Session;
 import org.example.dao.ScheduleDao;
 import org.example.dao.UserDao;
@@ -10,7 +12,12 @@ import org.example.service.UserService;
 
 import java.util.Scanner;
 
+@Getter
+@Setter
+
 public class Container {
+    public static Scanner sc;
+
     public static Session session;
     public static DBConnection dbConnection;
     public static ScheduleDao scheduleDao;
@@ -28,16 +35,16 @@ public class Container {
         exportService = new ExportService();
     }
 
-//    public static Scanner getScanner() {
-//        if ( sc == null ) {
-//            sc = new Scanner(System.in);
-//        }
-//
-//        return sc;
-//    }
+    public static Scanner getSc() {
+        if (sc == null) {
+            sc = new Scanner(System.in);
+        }
+
+        return sc;
+    }
 
     public static Session getSession() {
-        if ( session == null ) {
+        if (session == null) {
             session = new Session();
         }
 
@@ -45,10 +52,12 @@ public class Container {
     }
 
     public static DBConnection getDBConnection() {
-        if ( dbConnection == null ) {
+        if (dbConnection == null) {
             dbConnection = new DBConnection();
         }
 
         return dbConnection;
     }
+
+
 }

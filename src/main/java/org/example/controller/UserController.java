@@ -22,12 +22,10 @@ public class UserController extends Controller {
         session = Container.getSession();
     }
 
-    public void doAction(String cmd, String actionMethodName) {
+    public void doAction(String cmd) {
         this.cmd = cmd;
-        this.actionMethodName = actionMethodName;
-
-        switch (actionMethodName) {
-            case "가입":
+        switch (cmd) {
+            case "회원가입":
                 doJoin();
                 break;
             case "로그인":
@@ -40,7 +38,6 @@ public class UserController extends Controller {
                 System.out.println("존재하지 않는 명령어 입니다.");
                 break;
         }
-
     }
 
     public void doJoin() {

@@ -29,34 +29,27 @@ public class ScheduleController extends Controller {
         session = Container.getSession();
     }
 
-    public void doAction(String cmd, String actionMethodName) {
+    public void doAction(String cmd) {
         this.cmd = cmd;
-
-        switch (actionMethodName) {
-            case "등록":
+        switch (cmd) {
+            case "일정등록":
                 doWrite();
                 break;
-            case "변경":
+            case "일정변경":
                 doChange();
                 break;
-
-            case "검색":
+            case "일정검색":
                 showSearchOptions();
                 break;
-
-            case "목록":
-                showList();
-                break;
-
-            case "해당 달 목록":
+            case "일정목록":
                 findByMonth();
                 break;
-
             default:
                 System.out.println("존재하지 않는 명령어 입니다.");
                 break;
         }
     }
+
 
     private void showSearchOptions() {
         System.out.println("== 일정 검색 ==");
@@ -195,7 +188,7 @@ public class ScheduleController extends Controller {
         } else {
             System.out.println("===== " + year + "년 " + month + "월 일정 목록 =====");
             schedules.forEach(schedule ->
-                    System.out.printf("%s    | %s\n", schedule.date, schedule.todo));
+                    System.out.printf("%s    | %s\n", schedule.getDate(), schedule.getTodo()));
         }
     }
 
