@@ -19,10 +19,16 @@ CREATE TABLE schedules (
 SELECT * FROM schedules;
 
 -- 사용자 데이터 삽입
+
+
 INSERT INTO users (loginName, loginPw)
 VALUES ('애송이', '111'),
        ('송현지', '222'),
        ('박재민', '333');
+
+
+INSERT INTO users (loginName, loginPw)
+VALUES ('새 사용자', '새로운 비밀번호');  -- 회원가입 쿼리문
 
 
 -- 일정 데이터 삽입
@@ -53,5 +59,5 @@ WHERE DATE = '2024-04-13';
 
 -- 사용자 비밀번호 변경
 UPDATE users
-SET loginPw = 'new_password'
+SET loginPw = '444'
 WHERE loginName = '애송이';

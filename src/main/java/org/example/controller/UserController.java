@@ -42,13 +42,6 @@ public class UserController extends Controller {
         }
 
     }
-//    public void makeTestData() {
-//        System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
-//
-//        userService.join(new User("애송이", "111"));
-//        userService.join(new User("송현지", "222"));
-//        userService.join(new User("박재민", "333"));
-//    }
 
     public void doJoin() {
 
