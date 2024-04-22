@@ -1,42 +1,41 @@
 package org.example.dao;
 
+import org.example.container.Container;
+import org.example.db.DBConnection;
 import org.example.dto.User;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UserDao {
     public List<User> users;
+    private DBConnection dbConnection;
 
     public UserDao() {
         users = new ArrayList<>();
+        dbConnection = Container.getDBConnection();
     }
-    public void join(User user) {
-        users.add(user);
-    }
-    public int getUserIndexByLoginName(String loginName) {
-        int i = 0;
+    public int join(User user) {
+        StringBuilder sb = new StringBuilder();
 
-        for ( User user : users ) {
-            if ( user.loginName.equals(loginName) ) {
-                return i;
-            }
-            i++;
-        }
+        sb.append(String.format("INSERT INTO users "));
+        sb.append(String.format("loginName = '%s' ", user.loginName));
+        sb.append(String.format("loginPw = '%s' ", user.loginPw));
 
-        return -1;
+        return dbConnection.insert(sb.toString());
     }
 
     public User getUserByLoginName(String loginName) {
-        int index = getUserIndexByLoginName(loginName);
+        StringBuilder sb = new StringBuilder();
 
-        if ( index == -1 ) {
-            return null;
-        }
+        sb.append(String.format("SELECT * "));
+        sb.append(String.format("FROM users "));
+        sb.append(String.format("WHERE loginName = '%s' ", loginName));
 
-        return users.get(index);
+        Map<String, Object> userRow = dbConnection.selectRow((sb.toString()));
+
+        return new User(userRow);
     }
-
 }
 

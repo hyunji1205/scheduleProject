@@ -12,8 +12,9 @@ public class UserService {
         userDao = Container.userDao;
     }
 
-    public void join(User user) {
-        userDao.join(user);
+    public int join(String loginName, String loginPw) {
+        User user = new User(loginName, loginPw);
+        return userDao.join(user);
     }
 
     public User getUserByLoginName(String loginName) {

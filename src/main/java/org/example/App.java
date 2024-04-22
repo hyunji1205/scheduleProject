@@ -34,7 +34,7 @@ public class App {
         ExportController exportController = new ExportController(sc);
 
 //        scheduleController.makeTestData();
-        userController.makeTestData();
+//        userController.makeTestData();
 
 
         while (true) {

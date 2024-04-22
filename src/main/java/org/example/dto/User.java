@@ -4,6 +4,8 @@ package org.example.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter
 @Setter
 public class User {
@@ -15,7 +17,8 @@ public class User {
         this.loginPw = loginPw;
     }
 
-    public String getLoginName() {
-        return loginName;
+    public User(Map<String, Object> row) {
+        this.loginName = (String) row.get("loginName");
+        this.loginPw = (String) row.get("loginPw");
     }
 }

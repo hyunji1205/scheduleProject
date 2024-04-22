@@ -42,13 +42,13 @@ public class UserController extends Controller {
         }
 
     }
-    public void makeTestData() {
-        System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
-
-        userService.join(new User("애송이", "111"));
-        userService.join(new User("송현지", "222"));
-        userService.join(new User("박재민", "333"));
-    }
+//    public void makeTestData() {
+//        System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
+//
+//        userService.join(new User("애송이", "111"));
+//        userService.join(new User("송현지", "222"));
+//        userService.join(new User("박재민", "333"));
+//    }
 
     public void doJoin() {
 
@@ -83,8 +83,7 @@ public class UserController extends Controller {
             break;
         }
 
-        User user = new User(loginName, loginPw);
-        userService.join(user);
+        userService.join(loginName, loginPw);
 
         System.out.printf("회원가입이 완료되었습니다! %s님 환영합니다!\n", loginName);
 
@@ -122,9 +121,9 @@ public class UserController extends Controller {
     }
 
     private boolean isJoinableLoginName(String loginName) {
-        int index = userService.getUserIndexByLoginName(loginName);
+        User user = userService.getUserByLoginName(loginName);
 
-        if ( index == -1 ) {
+        if ( user == null ) {
             return true;
         }
 
