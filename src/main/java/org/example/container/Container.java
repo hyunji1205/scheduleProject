@@ -1,13 +1,18 @@
 package org.example.container;
 
-
+import org.example.controller.Session;
 import org.example.dao.ScheduleDao;
 import org.example.dao.UserDao;
+import org.example.db.DBConnection;
 import org.example.service.ExportService;
 import org.example.service.ScheduleService;
 import org.example.service.UserService;
 
+import java.util.Scanner;
+
 public class Container {
+    public static Session session;
+    public static DBConnection dbConnection;
     public static ScheduleDao scheduleDao;
     public static UserDao userDao;
 
@@ -21,5 +26,29 @@ public class Container {
         scheduleService = new ScheduleService();
         userService = new UserService();
         exportService = new ExportService();
+    }
+
+//    public static Scanner getScanner() {
+//        if ( sc == null ) {
+//            sc = new Scanner(System.in);
+//        }
+//
+//        return sc;
+//    }
+
+    public static Session getSession() {
+        if ( session == null ) {
+            session = new Session();
+        }
+
+        return session;
+    }
+
+    public static DBConnection getDBConnection() {
+        if ( dbConnection == null ) {
+            dbConnection = new DBConnection();
+        }
+
+        return dbConnection;
     }
 }

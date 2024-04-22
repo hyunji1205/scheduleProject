@@ -4,6 +4,7 @@ import org.example.container.Container;
 import org.example.dto.User;
 import org.example.service.UserService;
 
+import java.lang.reflect.Member;
 import java.util.Scanner;
 
 public class UserController extends Controller {
@@ -12,12 +13,14 @@ public class UserController extends Controller {
     private String cmd;
     private String actionMethodName;
     private UserService userService;
+    private Session session;
 
 
 
     public UserController(Scanner sc) {
         this.sc = sc;
         userService = Container.userService;
+        session = Container.getSession();
     }
 
     public void doAction(String cmd, String actionMethodName) {
@@ -107,13 +110,15 @@ public class UserController extends Controller {
             return;
         }
 
-        loginedUser = user;
+        session.setLoginedUser(user);
+        User setLoginedUser = session.getLoginedUser();
+
         System.out.printf("로그인 성공! %s님 환영합니다!\n", loginName);
     }
 
 
     private void doLogout() {
-        loginedUser = null;
+        session.setLoginedUser(null);
         System.out.println("로그아웃 되었습니다.");
     }
 

@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.container.Container;
 import org.example.dto.Schedule;
+import org.example.dto.User;
 import org.example.service.ScheduleService;
 import org.example.service.UserService;
 
@@ -18,12 +19,14 @@ public class ScheduleController extends Controller {
     private String actionMethodName;
     private ScheduleService ScheduleService;
     private UserService userService;
+    private Session session;
 
     public ScheduleController(Scanner sc) {
 
         this.sc = sc;
         this.schedules = new ArrayList<>();
         userService = Container.userService;
+        session = Container.getSession();
     }
 
     public void doAction(String cmd, String actionMethodName) {
@@ -31,10 +34,6 @@ public class ScheduleController extends Controller {
 
         switch (actionMethodName) {
             case "등록":
-                if ( isLogined() == false ) {
-                    System.out.println("로그인 후 이용해주세요.");
-                    break;
-                }
                 doWrite();
                 break;
             case "변경":
@@ -95,6 +94,8 @@ public class ScheduleController extends Controller {
 
         System.out.printf("일정 내용을 입력하세요: ");
         String todo = sc.nextLine();
+
+        User loginedUser = session.getLoginedUser();
 
         scheduleService.addSchedule(date, todo);
 

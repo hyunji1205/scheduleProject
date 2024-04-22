@@ -1,13 +1,24 @@
 package org.example;
 
+import org.example.container.Container;
 import org.example.controller.Controller;
 import org.example.controller.ExportController;
 import org.example.controller.ScheduleController;
 import org.example.controller.UserController;
+import org.example.db.DBConnection;
 
 import java.util.Scanner;
 
 public class App {
+    public App() {
+        DBConnection.DB_NAME = "scheduleProject";
+        DBConnection.DB_USER = "sbsst";
+        DBConnection.DB_PASSWORD = "sbs123414";
+        DBConnection.DB_PORT = 3306;
+
+        Container.getDBConnection().connect();
+
+    }
 
     public void start() {
 
@@ -72,7 +83,7 @@ public class App {
                 case "일정/검색":
                 case "일정/목록":
                 case "회원/로그아웃":
-                    if ( Controller.isLogined() == false ) {
+                    if ( Container.getSession().isLogined() == false ) {
                         System.out.println("로그인 후 이용해주세요.");
                         continue;
                     }
@@ -82,7 +93,7 @@ public class App {
             switch ( actionName ) {
                 case "회원/로그인":
                 case "회원/가입":
-                    if ( Controller.isLogined() ) {
+                    if (Container.getSession().isLogined() ) {
                         System.out.println("로그아웃 후 이용해주세요.");
                         continue;
                     }
