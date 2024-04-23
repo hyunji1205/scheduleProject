@@ -1,7 +1,6 @@
 package org.example.service;
 
 
-import org.example.container.Container;
 import org.example.dao.ScheduleDao;
 import org.example.dto.Schedule;
 
@@ -13,30 +12,30 @@ import java.util.List;
 public class ScheduleService {
     private ScheduleDao scheduleDao;
 
-    public ScheduleService() {
-        this.scheduleDao = Container.scheduleDao; // ScheduleDao 의존성 주입
+    public ScheduleService(ScheduleDao scheduleDao) {
+        this.scheduleDao = scheduleDao; // ScheduleDao 의존성 주입
     }
 
     // 일정 추가
-    public int addSchedule(String date, String todo) {
+    public int addSchedule(String dateStr, String todo) {
         try {
-            // Date 객체로 변환
-//            Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            // 날짜 문자열을 java.util.Date로 변환
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(dateStr);
 
+            // Schedule 객체 생성
             Schedule schedule = new Schedule(date, todo);
-
-            return scheduleDao.addSchedule(schedule); // 일정 추가
-        } catch (ParseException pe) {
-            throw new RuntimeException("날짜 파싱 중 오류: " + pe.getMessage());
+            return scheduleDao.addSchedule(schedule); // ScheduleDao를 통해 추가
+        } catch (ParseException e) {
+            throw new RuntimeException("날짜 형식 오류: " + dateStr, e);
         } catch (Exception e) {
-            throw new RuntimeException("일정 추가 중 오류: " + e.getMessage());
+            throw new RuntimeException("일정 추가 중 오류: " + e.getMessage(), e);
         }
     }
     // 일정 변경
     public boolean changeSchedule(String dateToChange, String newTodo) {
-        return scheduleDao.changeSchedule(dateToChange, newTodo);
+        return scheduleDao.changeSchedule(dateToChange, newTodo); // ScheduleDao의 변경 메소드 호출
     }
-
     // 모든 일정 반환
     public List<Schedule> getSchedules() {
         return scheduleDao.getSchedules(); // ScheduleDao의 모든 일정 반환

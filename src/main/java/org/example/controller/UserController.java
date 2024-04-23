@@ -18,7 +18,7 @@ public class UserController extends Controller {
 
     public UserController(Scanner sc) {
         this.sc = sc;
-        userService = Container.userService;
+        userService = Container.getUserService();
         session = Container.getSession();
     }
 

@@ -13,9 +13,9 @@ public class ScheduleDao {
     public List<Schedule> schedules;
     private DBConnection dbConnection;
 
-    public ScheduleDao() {
+    public ScheduleDao(DBConnection dbConnection) {
         schedules = new ArrayList<>();
-        dbConnection = Container.getDBConnection();
+        this.dbConnection = Container.getDBConnection();
 
     }
 
@@ -24,7 +24,7 @@ public class ScheduleDao {
     public int addSchedule(Schedule schedule) {
         try {
             // SQL 구문을 직접 작성
-            String sql = String.format("INSERT INTO schedules (date, todo) VALUES ('%s', '%s')",
+            String sql = String.format("INSERT INTO schedules (`date`, todo) VALUES ('%s', '%s')",
                     schedule.getDate(),
                     schedule.getTodo());
 
@@ -62,7 +62,7 @@ public class ScheduleDao {
     public boolean changeSchedule(String date, String newTodo) {
         try {
             // SQL 구문을 직접 작성
-            String sql = String.format("UPDATE schedules SET todo = '%s' WHERE date = '%s'",
+            String sql = String.format("UPDATE schedules SET todo = '%s' WHERE `date` = '%s'",
                     newTodo,
                     date);
 
@@ -77,27 +77,29 @@ public class ScheduleDao {
     // 날짜로 검색
     public List<Schedule> findByDate(String date) {
         // 쿼리 문자열을 포매팅하여 동적 생성
-        String sql = String.format("SELECT * FROM schedules WHERE date = '%s'", date);
+        // SQL 쿼리 문자열을 포매팅하여 생성
+        String sql = String.format("SELECT * FROM schedules WHERE `date` = '%s'", date);
 
         // 결과 리스트
         List<Schedule> result = new ArrayList<>();
 
         try {
-            // 쿼리 실행
+            // 쿼리 실행 및 결과 로드
             List<Map<String, Object>> rows = dbConnection.selectRows(sql);
 
-            // 결과가 비었을 때
-            if (rows == null || rows.isEmpty()) {
+            if (rows == null || rows.isEmpty()) { // 결과가 비었을 때
                 System.out.printf("해당 날짜(%s)의 일정이 없습니다.\n", date);
             } else {
                 // 결과를 Schedule 객체로 변환
                 for (Map<String, Object> row : rows) {
-                    result.add(new Schedule(row));
+                    if (row != null) { // row가 null인지 확인
+                        result.add(new Schedule(row));
+                    }
                 }
             }
         } catch (Exception e) { // 예외 처리
             System.err.println("쿼리 실행 중 오류 발생: " + e.getMessage());
-            e.printStackTrace(); // 예외 로그
+            e.printStackTrace();
         }
 
         return result; // 결과 반환

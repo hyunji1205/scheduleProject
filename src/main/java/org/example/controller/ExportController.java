@@ -10,7 +10,7 @@ public class ExportController extends Controller {
     private ExportService exportService;
 
     public ExportController(Scanner sc) {
-        exportService = Container.exportService;
+        exportService = Container.getExportService();
     }
 
     @Override

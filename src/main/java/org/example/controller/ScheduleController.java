@@ -10,23 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static org.example.container.Container.scheduleService;
 
 public class ScheduleController extends Controller {
     private Scanner sc;
     private List<Schedule> schedules;
     private String cmd;
-    private String actionMethodName;
-    private ScheduleService ScheduleService;
+    private ScheduleService scheduleService; // 필드 이름 변경
     private UserService userService;
     private Session session;
 
-    public ScheduleController(Scanner sc) {
 
+    public ScheduleController(Scanner sc) {
         this.sc = sc;
         this.schedules = new ArrayList<>();
-        userService = Container.userService;
-        session = Container.getSession();
+        this.scheduleService = Container.getScheduleService(); // 의존성 주입
+        this.userService = Container.getUserService();
+        this.session = Container.getSession();
     }
 
     public void doAction(String cmd) {
@@ -53,34 +52,31 @@ public class ScheduleController extends Controller {
 
     private void showSearchOptions() {
         System.out.println("== 일정 검색 ==");
+        System.out.println(" ----------------------------------");
         System.out.println("1. 날짜로 검색");
         System.out.println("2. 키워드로 검색");
+        System.out.println(" ----------------------------------");
+        System.out.print("메뉴를 선택하세요: ");
         String searchOption = sc.nextLine();
 
         switch (searchOption) {
-            case "1":
+            case "날짜로 검색":
                 searchByDate();
                 break;
 
-            case "2":
+            case "키워드로 검색":
                 searchByKeyword();
                 break;
 
             default:
-                System.out.println("올바른 옵션을 선택해주세요.");
+                System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
                 break;
         }
     }
 
-//    public void makeTestData() {
-//        System.out.println("테스트를 위한 게시물 데이터를 생성합니다");
-//
-//        scheduleService.addSchedule("2024-04-13", "재민생일");
-//        scheduleService.addSchedule("2024-04-20", "오늘");
-//        scheduleService.addSchedule("2024-04-23", "재민돼지");
-//    }
-
     private void doWrite() {
+        System.out.println(" == 일정 등록 == ");
+        System.out.println(" ----------------------------------");
         System.out.printf("일정 날짜를 입력하세요 (yyyy-MM-dd): ");
         String date = sc.nextLine();
 
@@ -91,16 +87,18 @@ public class ScheduleController extends Controller {
 
         System.out.printf("일정 내용을 입력하세요: ");
         String todo = sc.nextLine();
+
         try {
             scheduleService.addSchedule(date, todo); // 일정 추가
             System.out.println("일정이 등록되었습니다.");
         } catch (Exception e) {
-            System.err.println("일정 등록 중 오류 발생: " + e.getMessage());
-            e.printStackTrace(); // 예외 로그
+            System.err.println("일정 등록 중 오류: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-
     private void doChange() {
+        System.out.println(" == 일정 변경 == ");
+        System.out.println(" ----------------------------------");
         System.out.printf("일정 변경할 날짜를 입력하세요 (yyyy-MM-dd): ");
         String dateToChange = sc.nextLine();
 
@@ -122,6 +120,7 @@ public class ScheduleController extends Controller {
     }
 
     private void searchByDate() {
+        System.out.println("날짜로 검색합니다.");
         System.out.printf("검색할 날짜를 입력하세요 (yyyy-MM-dd): ");
         String searchDate = sc.nextLine();
 
@@ -142,6 +141,7 @@ public class ScheduleController extends Controller {
     }
 
     private void searchByKeyword() {
+        System.out.println("키워드로 검색합니다.");
         System.out.printf("검색할 키워드를 입력하세요: ");
         String keyword = sc.nextLine();
 
@@ -155,7 +155,6 @@ public class ScheduleController extends Controller {
             }
         }
     }
-
     private void showList() {
         List<Schedule> forPrintSchedules = scheduleService.getSchedules();
 
@@ -171,35 +170,35 @@ public class ScheduleController extends Controller {
     }
 
     private void findByMonth() {
-        System.out.print("년도를 입력하세요 (yyyy): ");
+        System.out.println(" == 일정 목록 == ");
+        System.out.println(" ----------------------------------");
+        System.out.printf("원하는 년도를 입력하세요 (yyyy): ");
         String year = sc.nextLine();
-        System.out.print("월을 입력하세요 (MM): ");
+
+        System.out.printf("원하는 월을 입력하세요 (MM): ");
         String month = sc.nextLine();
 
         if (!isValidYearAndMonth(year, month)) {
-            System.out.println("유효하지 않은 연도 또는 월 형식입니다.");
+            System.out.printf("유효하지 않은 연도 또는 월 형식입니다.");
             return;
         }
 
         List<Schedule> schedules = scheduleService.getSchedulesByYearAndMonth(year, month);
 
         if (schedules.isEmpty()) {
-            System.out.printf("해당 연도 및 월의 일정이 없습니다.\n");
+            System.out.printf("%s년 %s월에 일정이 없습니다.\n", year, month);
         } else {
-            System.out.println("===== " + year + "년 " + month + "월 일정 목록 =====");
+            System.out.printf("===== %s년 %s월 일정  목록 =====\n", year, month);
             schedules.forEach(schedule ->
-                    System.out.printf("%s    | %s\n", schedule.getDate(), schedule.getTodo()));
+                    System.out.printf("날짜: %s, 일정: %s\n", schedule.getDate(), schedule.getTodo())
+            );
         }
     }
-
     private boolean isValidDate(String date) {
-        // 간단한 날짜 형식 검사 (예: "yyyy-MM-dd")
-
-        return date.matches("\\d{4}-\\d{2}-\\d{2}");
+        return date.matches("\\d{4}-\\d{2}-\\d{2}"); // 간단한 날짜 형식 검사
     }
 
     private boolean isValidYearAndMonth(String year, String month) {
-        return year.matches("\\d{4}") && month.matches("\\d{2}");
+        return year.matches("\\d{4}") && month.matches("\\d{2}"); // 간단한 연도 및 월 검사
     }
 }
-

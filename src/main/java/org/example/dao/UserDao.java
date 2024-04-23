@@ -12,9 +12,9 @@ public class UserDao {
     public List<User> users;
     private DBConnection dbConnection;
 
-    public UserDao() {
+    public UserDao(DBConnection dbConnection) {
         users = new ArrayList<>();
-        dbConnection = Container.getDBConnection();
+        this.dbConnection = Container.getDBConnection();
     }
     public int join(User user) {
         StringBuilder sb = new StringBuilder();

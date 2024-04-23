@@ -8,8 +8,8 @@ public class UserService {
     private UserDao userDao;
 
 
-    public UserService() {
-        userDao = Container.userDao;
+    public UserService(UserDao userDao) {
+        this.userDao = Container.getUserDao();
     }
 
     public int join(String loginName, String loginPw) {

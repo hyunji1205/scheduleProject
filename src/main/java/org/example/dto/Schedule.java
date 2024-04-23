@@ -4,50 +4,52 @@ package org.example.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
 @Getter
 @Setter
 public class Schedule {
-    public Date date;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public Date date; // java.sql.Date 타입
     public String todo;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-    public Schedule(String date, String todo) throws ParseException {
-        // 문자열을 Date로 변환
-        this.date = dateFormat.parse(date);
+    public Schedule(Date date, String todo) {
+        this.date = date; // 이미 Date 객체인 경우 그대로 할당
         this.todo = todo;
     }
 
 
 
-    public Schedule(Map<String, Object> row) throws ParseException {
-        // 데이터베이스에서 가져온 값을 Date로 변환
-        this.date = dateFormat.parse(row.get("date").toString());
-        this.todo = (String) row.get("todo");
-    }
+    public Schedule(Map<String, Object> row) {
+        if (row != null) {
+            Object dateValue = row.get("date");
 
-    // getter for date
+            if (dateValue instanceof Date) { // java.sql.Date 확인
+                this.date = (Date) dateValue; // 캐스팅
+            } else if (dateValue instanceof String) { // 문자열인 경우
+                try {
+                    this.date = dateFormat.parse(dateValue.toString()); // 변환
+                } catch (Exception e) { // 예외 처리
+                    this.date = new Date(); // 예외 시 현재 날짜로 설정
+                }
+            } else {
+                this.date = new Date(); // 기본값
+            }
+
+            // todo 필드 설정
+            this.todo = row.get("todo") != null ? row.get("todo").toString() : "No Description";
+        } else {
+            // 예외 또는 기본값 설정
+            this.date = new Date();
+            this.todo = "No Description";
+        }
+    }
     public String getDate() {
-        return dateFormat.format(date); // Date 객체를 문자열로 변환하여 반환
+        // java.util.Date로 변환 후 포맷팅
+        return dateFormat.format(new java.util.Date(this.date.getTime()));
     }
-    // setter for date
-
-
-    // getter for todo
-    public String getTodo() {
-        return todo;
-    }
-
-    // setter for todo
-    public void setTodo(String todo) {
-        this.todo = todo;
-
-    }
-
 
 }

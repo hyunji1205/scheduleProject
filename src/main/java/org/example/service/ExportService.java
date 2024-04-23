@@ -14,8 +14,8 @@ public class ExportService {
     UserService userService;
 
     public ExportService() {
-        scheduleService = Container.scheduleService;
-        userService = Container.userService;
+        scheduleService = Container.getScheduleService();
+        userService = Container.getUserService();
     }
 
 

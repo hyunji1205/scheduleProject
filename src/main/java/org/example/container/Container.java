@@ -14,50 +14,72 @@ import java.util.Scanner;
 
 @Getter
 @Setter
-
 public class Container {
-    public static Scanner sc;
+    private static Scanner sc;
 
-    public static Session session;
-    public static DBConnection dbConnection;
-    public static ScheduleDao scheduleDao;
-    public static UserDao userDao;
+    private static Session session;
+    private static DBConnection dbConnection;
+    private static ScheduleDao scheduleDao;
+    private static UserDao userDao;
 
-    public static ScheduleService scheduleService;
-    public static UserService userService;
-    public static ExportService exportService;
+    private static ScheduleService scheduleService;
+    private static UserService userService;
+    private static ExportService exportService;
 
-    static {
-        scheduleDao = new ScheduleDao();
-        userDao = new UserDao();
-        scheduleService = new ScheduleService();
-        userService = new UserService();
-        exportService = new ExportService();
-    }
-
-    public static Scanner getSc() {
+    // 정적 초기화 블록 제거: 객체를 지연 초기화로 변경
+    public static synchronized Scanner getSc() {
         if (sc == null) {
             sc = new Scanner(System.in);
         }
-
         return sc;
     }
 
-    public static Session getSession() {
+    public static synchronized Session getSession() {
         if (session == null) {
             session = new Session();
         }
-
         return session;
     }
 
-    public static DBConnection getDBConnection() {
+    public static synchronized DBConnection getDBConnection() {
         if (dbConnection == null) {
-            dbConnection = new DBConnection();
+            dbConnection = new DBConnection(); // 지연 초기화
         }
-
         return dbConnection;
     }
 
+    public static synchronized ScheduleDao getScheduleDao() {
+        if (scheduleDao == null) {
+            scheduleDao = new ScheduleDao(getDBConnection());
+        }
+        return scheduleDao;
+    }
 
+    public static synchronized UserDao getUserDao() {
+        if (userDao == null) {
+            userDao = new UserDao(getDBConnection());
+        }
+        return userDao;
+    }
+
+    public static synchronized ScheduleService getScheduleService() {
+        if (scheduleService == null) {
+            scheduleService = new ScheduleService(getScheduleDao());
+        }
+        return scheduleService;
+    }
+
+    public static synchronized UserService getUserService() {
+        if (userService == null) {
+            userService = new UserService(getUserDao());
+        }
+        return userService;
+    }
+
+    public static synchronized ExportService getExportService() {
+        if (exportService == null) {
+            exportService = new ExportService(); // 의존성 주입 필요할 경우 설정
+        }
+        return exportService;
+    }
 }
